@@ -3,7 +3,7 @@
 
 This is simple student  project, that provides simple task manager functionality. You can add task category, tasks to it and subtasks to each task. You can mark tasks and subtasks are they done or not. And you can delete all finished  tasks.
 
-This project is web jquery client that used asp net web api for querying to database. 
+This project is web jquery client that uses asp net web api for querying to database. 
 
 ### Technologies was used ###
 
