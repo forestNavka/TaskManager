@@ -1,0 +1,65 @@
+﻿html {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 100%;
+    width:100%;
+}
+body {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 100%;
+    width:100%;
+}
+
+aside 
+{
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 80%;
+    overflow: auto; 
+    float:left;
+    width:20%;
+    }
+main 
+{
+    display:block;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 80%;
+    width:70%;
+    float:left;
+}
+ul {list-style-type:none;}
+ul li {margin:5px;}
+div.jumbotron h3 {margin-left:auto; margin-right:auto; width:20%;}
+span.glyphicon { float:right;}
+.panel-title
+{
+    text-align:center;
+}
+.done, .not-ready
+{
+    display:none;
+    font-size : small; 
+    float:left;
+}
+.done 
+{
+    color : #8AC007; 
+    }
+.not-ready
+{
+    color : #F60000;
+}
+.done > .glyphicon, .not-ready > .glyphicon
+{
+    float:left;
+} 
+li button
+{
+    width: 200px;
+    }   
