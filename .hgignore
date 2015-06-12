@@ -1,5 +1,4 @@
 syntax: glob
 bootstrap*
 TaskManager/bin/
-packages/
 TaskManager/obj/
