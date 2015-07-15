@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 using TaskManager.Models.DAL;
-using TaskManager.Models;
-using System.Net.Http;
-using System.Net;
+using TaskManager.Models.DAL.SpecificRepositories;
+using TaskManager.Models.Entities;
+using TaskManager.Models.Services;
 
 namespace TaskManager.Controllers
 {
@@ -15,7 +16,7 @@ namespace TaskManager.Controllers
     /// </summary>
     public class TasksController : ApiController
     {
-        private Repository<Task> _repository = new Repository<Task>();
+        private TaskService _service = new TaskService(new TaskRepository());
         private bool _disposed = false;
 
         /// <summary>
@@ -27,8 +28,8 @@ namespace TaskManager.Controllers
         public IEnumerable<Task> Get(string query=null)
         {
             if (query == null)
-                return _repository.GetAll().ToList();
-            return _repository.GetByQuery(string.Format("Select * from Tasks where {0}", query)).ToList();
+                return _service.GetAll();
+            return _service.GetByQuery(query);
         }
 
         /// <summary>
@@ -39,7 +40,7 @@ namespace TaskManager.Controllers
         [HttpGet]
         public Task Get(Guid id)
         {
-            return _repository.GetById(id);
+            return _service.Get(id);
         }
 
         /// <summary>
@@ -50,12 +51,9 @@ namespace TaskManager.Controllers
         [HttpPost]
         public HttpResponseMessage Post([FromBody]Task task)
         {
-            task.Id = Guid.NewGuid();
-            task.Date = DateTime.Now;
             try
             {
-                _repository.Add(task);
-                _repository.Save();
+                _service.AddTask(task);
             }
 
             catch
@@ -75,18 +73,19 @@ namespace TaskManager.Controllers
         [HttpPut]
         public HttpResponseMessage Put(Guid id, [FromBody]bool isDone)
         {
-            Task task = _repository.GetById(id);
-            task.IsDone = isDone;
-                try
-                {
-                    _repository.Update(task);
-                    _repository.Save();
-                }
+            try
+            {
+                _service.UpdateTask(id, isDone);
+            }
+            catch (NullReferenceException)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
 
-                catch
-                {
-                    return new HttpResponseMessage(HttpStatusCode.BadRequest);
-                }
+            catch
+            {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
 
                 return new HttpResponseMessage(HttpStatusCode.OK);
         }
@@ -100,14 +99,7 @@ namespace TaskManager.Controllers
         {
             try
             {
-                IEnumerable<Task> tasks = _repository.GetAll();
-                foreach (Task task in tasks)
-                {
-                    if (task.IsDone)
-                        _repository.Delete(task);
-                }
-
-                _repository.Save();
+                _service.DeleteFinishedTasks();
             }
 
             catch
@@ -147,7 +139,7 @@ namespace TaskManager.Controllers
                 // Free any other managed objects here.
                 //
             }
-            _repository.Dispose();
+            _service.Dispose();
             base.Dispose(disposing);
             _disposed = true;
         }

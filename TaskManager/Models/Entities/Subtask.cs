@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TaskManager.Models
+namespace TaskManager.Models.Entities
 {
     /// <summary>
     /// Describes a subtask

@@ -2,8 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using TaskManager.Models;
 using TaskManager.Models.DAL;
+using TaskManager.Models.DAL.SpecificRepositories;
+using TaskManager.Models.Entities;
+using TaskManager.Models.Services;
+using System.Net.Http;
+using System.Net;
+
 
 namespace TaskManager.Controllers
 {
@@ -12,7 +17,7 @@ namespace TaskManager.Controllers
     /// </summary>
     public class CategoriesController : ApiController
     {
-        private Repository<Category> _repository = new Repository<Category>();
+        private CategoryService _service = new CategoryService(new CategoryRepository());
         private bool _disposed = false;
 
         /// <summary>
@@ -22,7 +27,7 @@ namespace TaskManager.Controllers
         [HttpGet]
         public IEnumerable<Category> Get()
         {
-            return _repository.GetAll().ToList();
+            return _service.GetAll();
         }
 
         /// <summary>
@@ -33,7 +38,7 @@ namespace TaskManager.Controllers
         [HttpGet]
         public Category Get(Guid id)
         {
-            return _repository.GetById(id);
+            return _service.Get(id);
         }
 
         /// <summary>
@@ -41,11 +46,17 @@ namespace TaskManager.Controllers
         /// </summary>
         /// <param name="category">Category for adding</param>
         [HttpPost]
-        public void Post([FromBody]Category category)
+        public HttpResponseMessage Post([FromBody]Category category)
         {
-            category.Id = Guid.NewGuid();
-            _repository.Add(category);
-            _repository.Save();
+            try
+            {
+                _service.AddCategory(category);
+            }
+            catch
+            {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+            return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
         /// <summary>
@@ -54,12 +65,23 @@ namespace TaskManager.Controllers
         /// <param name="id">id of category for updating</param>
         /// <param name="category">New category value</param>
         [HttpPut]
-        public void Put(Guid id, [FromBody]Category category)
+        public HttpResponseMessage Put(Guid id, [FromBody]Category category)
         {
-            Category native = _repository.GetById(id);
-            native = category;
-            _repository.Update(native);
-            _repository.Save();
+            try 
+            {
+                _service.UpdateCategory(id, category);
+            }
+            catch (NullReferenceException)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+
+            catch
+            {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
         /// <summary>
@@ -67,10 +89,23 @@ namespace TaskManager.Controllers
         /// </summary>
         /// <param name="id">id of category for deleting</param>
         [HttpDelete]
-        public void Delete(Guid id)
+        public HttpResponseMessage Delete(Guid id)
         {
-            _repository.Delete(_repository.GetById(id));
-            _repository.Save();
+            try
+            {
+                _service.DeleteCategory(id);
+            }
+            catch (NullReferenceException)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+
+            catch
+            {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
         #region Disposing
@@ -89,7 +124,7 @@ namespace TaskManager.Controllers
                 // Free any other managed objects here.
                 //
             }
-             _repository.Dispose();
+             _service.Dispose();
              base.Dispose(disposing);
             _disposed = true;
         }

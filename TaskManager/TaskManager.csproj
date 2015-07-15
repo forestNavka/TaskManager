@@ -97,12 +97,20 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\Entities\Category.cs" />
+    <Compile Include="Models\DAL\SpecificRepositories\CategoryRepository.cs" />
+    <Compile Include="Models\DAL\IRepository.cs" />
     <Compile Include="Models\DAL\Repositoty.cs" />
+    <Compile Include="Models\DAL\SpecificRepositories\SubtaskRepository.cs" />
     <Compile Include="Models\DAL\TaskManagerContext.cs" />
     <Compile Include="Models\DAL\TaskManagerContextInitializer.cs" />
-    <Compile Include="Models\Subtask.cs" />
-    <Compile Include="Models\Task.cs" />
+    <Compile Include="Models\DAL\SpecificRepositories\TaskRepository.cs" />
+    <Compile Include="Models\Entities\Subtask.cs" />
+    <Compile Include="Models\Entities\Task.cs" />
+    <Compile Include="Models\Services\CategoryService.cs" />
+    <Compile Include="Models\Services\Service.cs" />
+    <Compile Include="Models\Services\SubtaskService.cs" />
+    <Compile Include="Models\Services\TaskService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
