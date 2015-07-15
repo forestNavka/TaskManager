@@ -11,7 +11,7 @@ namespace TaskManager.Models.DAL
     /// Provides CRUD functionality for each entity type
     /// </summary>
     /// <typeparam name="T">Type of entity</typeparam>
-    public class Repository<T> : IDisposable
+    public class Repository<T> : IRepository<T>
         where T : class
     {
         private TaskManagerContext _context = new TaskManagerContext();

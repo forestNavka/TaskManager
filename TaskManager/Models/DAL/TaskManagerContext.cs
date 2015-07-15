@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using TaskManager.Models.Entities;
 
 namespace TaskManager.Models.DAL
 {

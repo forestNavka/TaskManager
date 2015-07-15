@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace TaskManager.Models
+namespace TaskManager.Models.Entities
 {
     /// <summary>
     /// Represents a category of tasks in manager
